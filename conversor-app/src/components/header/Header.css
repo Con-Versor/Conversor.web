@@ -1,0 +1,55 @@
+.header {
+  width: 100%;
+}
+
+.header-topo {
+  background-color: #f5d300; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; 
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.logo-imagem {
+  width: 40px; 
+  height: 40px;
+}
+
+
+.ajuda a {
+  margin-left: 1rem;
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.ajuda a:hover {
+  text-decoration: underline;
+}
+
+.header-menu {
+  background-color: #e0e0e0; 
+  display: flex;
+  justify-content: left;
+  gap: 2rem;
+  padding: 0.5rem 5rem;
+}
+
+.header-menu a {
+  color: black;
+  font-weight: bold;
+  font-size: 1rem;
+  text-decoration: none;
+}
+
+.header-menu a:hover {
+  text-decoration: underline;
+}
