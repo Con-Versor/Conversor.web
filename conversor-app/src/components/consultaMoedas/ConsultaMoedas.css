@@ -1,0 +1,92 @@
+/* ConsultaMoedas.css */
+.consulta-moedas-container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .titulo {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .campo {
+    margin-bottom: 20px;
+  }
+  
+  .campo label {
+    display: block;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #555;
+  }
+  
+  select {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+  }
+  
+  .erro {
+    color: red;
+    text-align: center;
+    font-size: 1.1rem;
+    margin-top: 10px;
+  }
+  
+  .detalhes-moeda {
+    background-color: #f7f7f7;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+  }
+  
+  .detalhes-moeda h2 {
+    font-size: 2rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  
+  .detalhes-moeda p {
+    font-size: 1rem;
+    margin: 8px 0;
+    color: #555;
+  }
+  
+  .detalhes-moeda h3 {
+    font-size: 1.3rem;
+    margin-top: 20px;
+    color: #333;
+    text-decoration: underline;
+  }
+  
+  .detalhes-moeda p {
+    font-size: 1.1rem;
+    color: #666;
+  }
+  
+  .taxas {
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 15px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .taxas p {
+    font-size: 1.1rem;
+    color: #444;
+  }
+  

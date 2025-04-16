@@ -1,48 +1,104 @@
+/* Conversor.css */
+
+/* Estilo geral da tela */
 .conversor-container {
-  padding: 2rem;
-  text-align: center;
+  width: 90%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .titulo {
+  text-align: center;
   font-size: 2.5rem;
-  margin-bottom: 2rem;
   font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
 }
 
 .bloco-conversao {
-  background-color: #fafafa; 
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 2rem;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
 .campo {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  flex: 1;
+  margin-bottom: 20px;
 }
 
-input,
-select {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  width: 200px;
+.campo label {
+  display: block;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+input, select {
+  width: 100%;
+  padding: 12px;
   font-size: 1rem;
-  background-color: #ffffff;
-  color: #000000;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
 }
 
-.seta {
-  font-size: 2rem;
-  padding: 0 1rem;
+.trocar-moedas {
+  background-color: #f1c40f;
+  border: none;
+  padding: 10px 15px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.trocar-moedas:hover {
+  background-color: #d39b00;
 }
 
 .info-cotacao {
-  margin-top: 1.5rem;
+  font-size: 1.2rem;
+  margin-top: 20px;
+  text-align: center;
+}
+
+select {
+  display: inline-block;
+}
+
+.moeda-select {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.moeda-select select {
+  flex: 1;
+}
+
+.moeda-select img {
+  width: 30px;
+  height: 20px;
+  margin-left: 10px;
+}
+
+.moeda-caixa {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   font-size: 1.2rem;
   font-weight: bold;
+  color: #333;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f1f1f1;
+  margin-right: 10px;
 }
