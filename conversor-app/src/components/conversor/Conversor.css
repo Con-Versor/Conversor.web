@@ -22,14 +22,15 @@
 .bloco-conversao {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start; /* Alterado para alinhar à esquerda */
   gap: 20px;
   flex-wrap: wrap;
 }
 
 .campo {
-  flex: 1;
+  flex: 0 1 auto; /* Ajuste para não crescer demais */
   margin-bottom: 20px;
+  min-width: 250px; /* Largura mínima para os campos */
 }
 
 .campo label {
@@ -37,6 +38,7 @@
   font-size: 1.2rem;
   margin-bottom: 10px;
   color: #555;
+  text-align: left; /* Garantir alinhamento à esquerda */
 }
 
 input, select {
@@ -48,57 +50,84 @@ input, select {
   background-color: #f9f9f9;
 }
 
-.trocar-moedas {
+.botao-trocar {
   background-color: #f1c40f;
   border: none;
   padding: 10px 15px;
   font-size: 1.5rem;
   cursor: pointer;
   border-radius: 5px;
-  margin-top: 20px;
+  margin: 0 10px;
   transition: background-color 0.3s ease;
+  align-self: center;
 }
 
-.trocar-moedas:hover {
+.botao-trocar:hover {
   background-color: #d39b00;
 }
 
 .info-cotacao {
   font-size: 1.2rem;
   margin-top: 20px;
-  text-align: center;
-}
-
-select {
-  display: inline-block;
-}
-
-.moeda-select {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.moeda-select select {
-  flex: 1;
-}
-
-.moeda-select img {
-  width: 30px;
-  height: 20px;
-  margin-left: 10px;
-}
-
-.moeda-caixa {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #333;
-  border: 1px solid #ccc;
-  padding: 10px;
+  text-align: left; /* Alterado para alinhar à esquerda */
+  padding: 15px;
+  background-color: #f8f9fa;
   border-radius: 5px;
-  background-color: #f1f1f1;
-  margin-right: 10px;
+  border-left: 4px solid #f1c40f;
+}
+
+.detalhes {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.detalhes span {
+  display: block;
+}
+
+.loading {
+  text-align: left;
+  color: #666;
+  font-style: italic;
+  margin-top: 10px;
+}
+
+.erro {
+  text-align: left;
+  color: #e74c3c;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #fdecea;
+  border-radius: 5px;
+}
+
+/* Estilos para os selects de moeda */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 1em;
+  padding-right: 30px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .bloco-conversao {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .botao-trocar {
+    margin: 10px 0;
+    align-self: flex-start;
+  }
+  
+  .campo {
+    width: 100%;
+  }
 }

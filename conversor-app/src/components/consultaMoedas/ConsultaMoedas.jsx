@@ -1,99 +1,145 @@
 import React, { useState, useEffect } from 'react';
 import './ConsultaMoedas.css';
 
+// Mesmo conjunto de moedas usado no conversor
+const MOEDAS_DISPONIVEIS = ['BRL', 'USD', 'EUR', 'JPY', 'GBP', 'ARS', 'CAD', 'AUD', 'CHF', 'CNY'];
+const API_TOKEN = '4b1941d5f3aefc3b0a148a3a067833cbf3309cdbe62393409eb32a01d17adb47';
+
 function ConsultaMoedas() {
-  const [moedaSelecionada, setMoedaSelecionada] = useState(null);
-  const [moedas, setMoedas] = useState([]);
+  const [moedaSelecionada, setMoedaSelecionada] = useState('USD');
   const [detalhesMoeda, setDetalhesMoeda] = useState(null);
-  const [erro, setErro] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [resumoMoeda, setResumoMoeda] = useState('');
 
-  const API_TOKEN = '4b1941d5f3aefc3b0a148a3a067833cbf3309cdbe62393409eb32a01d17adb47';
-
   useEffect(() => {
-    async function carregarMoedas() {
-      try {
-        const resposta = await fetch(`https://economia.awesomeapi.com.br/json/all?token=${API_TOKEN}`);
-        const dados = await resposta.json();
-        setMoedas(Object.keys(dados)); 
-      } catch (error) {
-        setErro('Erro ao carregar as moedas');
-      }
-    }
-
-    carregarMoedas();
-  }, []);
-
-  useEffect(() => {
-    async function carregarDetalhes() {
+    const fetchMoedaInfo = async () => {
       if (!moedaSelecionada) return;
+      
+      setLoading(true);
+      setError(null);
 
       try {
-        const resposta = await fetch(`https://economia.awesomeapi.com.br/json/last/${moedaSelecionada}-BRL?token=${API_TOKEN}`);
-        const dados = await resposta.json();
-        setDetalhesMoeda(dados[`${moedaSelecionada}BRL`]);
+        // Busca informações para todas as moedas disponíveis em relação à selecionada
+        const pares = MOEDAS_DISPONIVEIS
+          .filter(moeda => moeda !== moedaSelecionada)
+          .map(moeda => `${moedaSelecionada}-${moeda}`)
+          .join(',');
 
-        const resumo = obterResumoMoeda(moedaSelecionada);
-        setResumoMoeda(resumo);
-      } catch (error) {
-        setErro('Erro ao carregar os detalhes da moeda');
+        const url = `https://economia.awesomeapi.com.br/json/last/${pares}?token=${API_TOKEN}`;
+        const res = await fetch(url);
+        
+        if (!res.ok) {
+          throw new Error(`Erro na API: ${res.status}`);
+        }
+
+        const data = await res.json();
+        setDetalhesMoeda(data);
+        setResumoMoeda(obterResumoMoeda(moedaSelecionada));
+      } catch (err) {
+        console.error('Erro ao buscar informações:', err);
+        setError('Não foi possível obter as cotações. Tente novamente mais tarde.');
+      } finally {
+        setLoading(false);
       }
-    }
-
-    carregarDetalhes();
-  }, [moedaSelecionada]);
-
-  function obterResumoMoeda(moeda) {
-    const resumos = {
-      USD: "O Dólar Americano (USD) é a moeda oficial dos Estados Unidos e uma das mais utilizadas em transações financeiras no mundo.",
-      EUR: "O Euro (EUR) é a moeda oficial de 19 dos 27 países da União Europeia e é uma das principais moedas do mercado global.",
-      BRL: "O Real (BRL) é a moeda oficial do Brasil, país da América do Sul.",
-      JPY: "O Iene (JPY) é a moeda oficial do Japão, uma das principais economias do mundo.",
-      GBP: "A Libra Esterlina (GBP) é a moeda oficial do Reino Unido e é uma das mais antigas ainda em uso.",
     };
 
-    return resumos[moeda] || "Resumo não disponível para esta moeda.";
-  }
+    const timeoutId = setTimeout(fetchMoedaInfo, 500);
+    return () => clearTimeout(timeoutId);
+  }, [moedaSelecionada]);
+
+  const obterResumoMoeda = (moeda) => {
+    const resumos = {
+      USD: "O Dólar Americano é a moeda oficial dos Estados Unidos e a principal moeda de reserva global.",
+      EUR: "O Euro é a moeda oficial da Zona Euro, utilizada por 19 dos 27 países da União Europeia.",
+      BRL: "O Real é a moeda corrente no Brasil, emitida pelo Banco Central do Brasil.",
+      JPY: "O Iene é a moeda oficial do Japão, terceira maior economia do mundo.",
+      GBP: "A Libra Esterlina é a moeda do Reino Unido e a mais antiga ainda em circulação.",
+      ARS: "O Peso Argentino é a moeda oficial da Argentina, país da América do Sul.",
+      CAD: "O Dólar Canadense é a moeda oficial do Canadá, uma das principais commodities currencies.",
+      AUD: "O Dólar Australiano é a moeda oficial da Austrália e ilhas do Pacífico.",
+      CHF: "O Franco Suíço é a moeda da Suíça e Liechtenstein, considerada um porto seguro.",
+      CNY: "O Yuan Renminbi é a moeda oficial da China, segunda maior economia do mundo."
+    };
+
+    return resumos[moeda] || `Informações sobre ${moeda}`;
+  };
+
+  const formatarMoeda = (valor, moeda, locale = 'pt-BR') => {
+    try {
+      return Intl.NumberFormat(locale, { 
+        style: 'currency', 
+        currency: moeda 
+      }).format(valor);
+    } catch {
+      return `${valor} ${moeda}`;
+    }
+  };
+
+  const formatarData = (timestamp) => {
+    if (!timestamp) return 'N/A';
+    return new Date(timestamp).toLocaleString('pt-BR');
+  };
 
   return (
     <div className="consulta-moedas-container">
-      <h1 className="titulo">Consultar Moedas</h1>
+      <h1 className="titulo">INFORMAÇÕES DE MOEDAS</h1>
 
       <div className="campo">
-        <label>Escolha uma moeda:</label>
+        <label>Selecione a moeda base:</label>
         <select
-          value={moedaSelecionada || ''}
+          value={moedaSelecionada}
           onChange={(e) => setMoedaSelecionada(e.target.value)}
+          aria-label="Moeda base"
         >
-          <option value="" disabled>Selecione a moeda</option>
-          {moedas.map((moeda) => (
-            <option key={moeda} value={moeda}>
-              {moeda}
+          {MOEDAS_DISPONIVEIS.map((codigo) => (
+            <option key={codigo} value={codigo}>
+              {codigo} - {new Intl.DisplayNames(['pt'], { type: 'currency' }).of(codigo)}
             </option>
           ))}
         </select>
       </div>
 
-      {erro && <p className="erro">{erro}</p>}
+      {loading && <div className="loading">Carregando informações...</div>}
+      {error && <div className="erro">{error}</div>}
 
-      {detalhesMoeda && (
+      {detalhesMoeda && !loading && (
         <div className="detalhes-moeda">
-          <div className="informacoes-moeda">
-            <h2>{moedaSelecionada}</h2>
-            <p><strong>Código:</strong> {detalhesMoeda.code}</p>
-            <p><strong>Bid (valor de compra):</strong> {detalhesMoeda.bid}</p>
-            <p><strong>Ask (valor de venda):</strong> {detalhesMoeda.ask}</p>
-            <p><strong>Nome:</strong> {detalhesMoeda.name}</p>
-            <p><strong>Data da cotação:</strong> {detalhesMoeda.create_date}</p>
+          <div className="card-moeda">
+            <h2>
+              {moedaSelecionada} - {new Intl.DisplayNames(['pt'], { type: 'currency' }).of(moedaSelecionada)}
+            </h2>
+            <p className="resumo">{resumoMoeda}</p>
           </div>
 
-          <h3>Resumo</h3>
-          <p>{resumoMoeda}</p>
+          <h3>Cotações Relativas</h3>
+          <div className="tabela-cotacoes">
+            <div className="cabecalho-tabela">
+              <span>Moeda</span>
+              <span>Valor</span>
+              <span>Variação</span>
+              <span>Atualizado em</span>
+            </div>
+            
+            {MOEDAS_DISPONIVEIS.filter(moeda => moeda !== moedaSelecionada).map((moeda) => {
+              const key = `${moedaSelecionada}${moeda}`;
+              const info = detalhesMoeda[key];
+              
+              if (!info) return null;
 
-          <h3>Taxas de Câmbio</h3>
-          <div className="taxas">
-            <p><strong>De {moedaSelecionada}:</strong> {detalhesMoeda.bid}</p>
-            <p><strong>Para {moedaSelecionada}:</strong> {detalhesMoeda.ask}</p>
+              return (
+                <div key={key} className="linha-cotacao">
+                  <span className="nome-moeda">
+                    {moeda} - {new Intl.DisplayNames(['pt'], { type: 'currency' }).of(moeda)}
+                  </span>
+                  <span>{formatarMoeda(info.bid, moeda)}</span>
+                  <span className={info.pctChange >= 0 ? 'positivo' : 'negativo'}>
+                    {info.pctChange}%
+                  </span>
+                  <span>{formatarData(info.create_date)}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
