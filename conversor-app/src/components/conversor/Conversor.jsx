@@ -9,13 +9,14 @@ function Conversor() {
   const [taxa, setTaxa] = useState(null);
   const [horaCotacao, setHoraCotacao] = useState(null);
   const [moedasDisponiveis, setMoedasDisponiveis] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const API_TOKEN = '4b1941d5f3aefc3b0a148a3a067833cbf3309cdbe62393409eb32a01d17adb47';
 
-  
+  const DEBOUNCE_DELAY = 500;
+
   useEffect(() => {
     async function carregarMoedas() {
-      
       const moedas = [
         'BRL', 'USD', 'EUR', 'JPY', 'GBP', 'ARS', 'CAD', 'AUD', 'CHF', 'CNY'
       ];
@@ -26,14 +27,15 @@ function Conversor() {
   }, []);
 
   useEffect(() => {
-    async function converter() {
+    const timeoutId = setTimeout(async () => {
       if (!valor || !moedaOrigem || !moedaDestino) return;
+      
+      setLoading(true); 
 
       try {
-        const url = `/api/json/last/${moedaOrigem}-${moedaDestino}?token=${API_TOKEN}`;
+        const url = `https://economia.awesomeapi.com.br/json/last/${moedaOrigem}-${moedaDestino}?token=${API_TOKEN}`;
         const res = await fetch(url);
         const data = await res.json();
-        console.log('Resposta da API:', data);
 
         const key = `${moedaOrigem}${moedaDestino}`; 
         const taxa = parseFloat(data[key].bid);
@@ -46,10 +48,12 @@ function Conversor() {
       } catch (error) {
         console.error('Erro ao converter moeda:', error);
       }
-    }
 
-    converter();
-  }, [valor, moedaOrigem, moedaDestino]);
+      setLoading(false); 
+    }, DEBOUNCE_DELAY);
+
+    return () => clearTimeout(timeoutId);
+  }, [valor, moedaOrigem, moedaDestino]); 
 
   return (
     <div className="conversor-container">
@@ -92,6 +96,8 @@ function Conversor() {
           </select>
         </div>
       </div>
+
+      {loading && <p>Carregando...</p>}
 
       {resultado && (
         <p className="info-cotacao">
