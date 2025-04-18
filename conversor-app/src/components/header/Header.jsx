@@ -12,7 +12,7 @@ function Header() {
           <span>CON-VERSOR</span>
         </div>
         <div className="ajuda">
-          <a href="#">Ajuda</a> | <a href="#">Dúvidas</a>
+          <a href="#">Ajuda</a>  <a href="#">Dúvidas</a>
         </div>
       </div>
       <nav className="header-menu">
