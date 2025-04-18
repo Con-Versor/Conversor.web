@@ -10,13 +10,12 @@ function ConsultaMoedas() {
 
   const API_TOKEN = '4b1941d5f3aefc3b0a148a3a067833cbf3309cdbe62393409eb32a01d17adb47';
 
-  // Pegar lista de moedas quando o componente carregar
   useEffect(() => {
     async function carregarMoedas() {
       try {
         const resposta = await fetch(`https://economia.awesomeapi.com.br/json/all?token=${API_TOKEN}`);
         const dados = await resposta.json();
-        setMoedas(Object.keys(dados)); // Guardando apenas as chaves das moedas
+        setMoedas(Object.keys(dados)); 
       } catch (error) {
         setErro('Erro ao carregar as moedas');
       }
@@ -25,7 +24,6 @@ function ConsultaMoedas() {
     carregarMoedas();
   }, []);
 
-  // Buscar detalhes da moeda selecionada
   useEffect(() => {
     async function carregarDetalhes() {
       if (!moedaSelecionada) return;
@@ -35,7 +33,6 @@ function ConsultaMoedas() {
         const dados = await resposta.json();
         setDetalhesMoeda(dados[`${moedaSelecionada}BRL`]);
 
-        // Definir o resumo com base na moeda selecionada
         const resumo = obterResumoMoeda(moedaSelecionada);
         setResumoMoeda(resumo);
       } catch (error) {
@@ -46,7 +43,6 @@ function ConsultaMoedas() {
     carregarDetalhes();
   }, [moedaSelecionada]);
 
-  // Função para obter resumo da moeda
   function obterResumoMoeda(moeda) {
     const resumos = {
       USD: "O Dólar Americano (USD) é a moeda oficial dos Estados Unidos e uma das mais utilizadas em transações financeiras no mundo.",
@@ -54,7 +50,6 @@ function ConsultaMoedas() {
       BRL: "O Real (BRL) é a moeda oficial do Brasil, país da América do Sul.",
       JPY: "O Iene (JPY) é a moeda oficial do Japão, uma das principais economias do mundo.",
       GBP: "A Libra Esterlina (GBP) é a moeda oficial do Reino Unido e é uma das mais antigas ainda em uso.",
-      // Adicione mais resumos para outras moedas conforme necessário
     };
 
     return resumos[moeda] || "Resumo não disponível para esta moeda.";
@@ -93,7 +88,7 @@ function ConsultaMoedas() {
           </div>
 
           <h3>Resumo</h3>
-          <p>{resumoMoeda}</p> {/* Exibindo o resumo da moeda */}
+          <p>{resumoMoeda}</p>
 
           <h3>Taxas de Câmbio</h3>
           <div className="taxas">
