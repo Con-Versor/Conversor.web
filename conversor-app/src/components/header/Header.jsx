@@ -19,7 +19,7 @@ function Header() {
         <Link to="/">Converter</Link>
         <Link to="/moedas">Consultar Moedas</Link>
         <Link to="/grafico">Gráfico de cotação</Link>
-        <Link to="/ranking">Moedas mais valorizadas</Link>
+        <Link to="/ranking">Moedas mais negociadas</Link>
       </nav>
     </header>
   );
