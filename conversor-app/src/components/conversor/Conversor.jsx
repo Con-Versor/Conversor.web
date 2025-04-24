@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import './Conversor.css';
 
-// Constantes para melhor organização e manutenção
 const API_TOKEN = '4b1941d5f3aefc3b0a148a3a067833cbf3309cdbe62393409eb32a01d17adb47';
-const DEBOUNCE_DELAY = 500;
+const DEBOUNCE_DELAY = 1300;
 const MOEDAS_DISPONIVEIS = ['BRL', 'USD', 'EUR', 'JPY', 'GBP', 'ARS', 'CAD', 'AUD', 'CHF', 'CNY'];
 
 function Conversor() {
@@ -16,7 +15,6 @@ function Conversor() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Formatação de moeda reutilizável
   const formatarMoeda = useCallback((valor, moeda, locale = 'pt-BR') => {
     try {
       return Intl.NumberFormat(locale, { 
@@ -28,7 +26,7 @@ function Conversor() {
     }
   }, []);
 
-  // Função de conversão com tratamento de erros
+
   const converterMoeda = useCallback(async () => {
     if (!valor || valor <= 0 || !moedaOrigem || !moedaDestino) {
       setResultado(null);
@@ -68,19 +66,16 @@ function Conversor() {
     }
   }, [valor, moedaOrigem, moedaDestino]);
 
-  // Efeito com debounce para evitar chamadas excessivas à API
   useEffect(() => {
     const timeoutId = setTimeout(converterMoeda, DEBOUNCE_DELAY);
     return () => clearTimeout(timeoutId);
   }, [converterMoeda]);
 
-  // Tratamento para valores inválidos
   const handleValorChange = (e) => {
     const novoValor = parseFloat(e.target.value) || 0;
     setValor(novoValor >= 0 ? novoValor : 0);
   };
 
-  // Troca as moedas de origem e destino
   const trocarMoedas = () => {
     setMoedaOrigem(moedaDestino);
     setMoedaDestino(moedaOrigem);
