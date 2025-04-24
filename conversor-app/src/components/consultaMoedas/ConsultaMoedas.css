@@ -1,92 +1,167 @@
-/* ConsultaMoedas.css */
 .consulta-moedas-container {
-    width: 90%;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .titulo {
-    text-align: center;
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  .campo {
-    margin-bottom: 20px;
-  }
-  
-  .campo label {
-    display: block;
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    color: #555;
-  }
-  
-  select {
-    width: 100%;
-    padding: 12px;
-    font-size: 1rem;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-  }
-  
-  .erro {
-    color: red;
-    text-align: center;
-    font-size: 1.1rem;
-    margin-top: 10px;
-  }
-  
-  .detalhes-moeda {
-    background-color: #f7f7f7;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-  }
-  
-  .detalhes-moeda h2 {
-    font-size: 2rem;
-    color: #333;
-    text-align: center;
-    margin-bottom: 15px;
-  }
-  
-  .detalhes-moeda p {
-    font-size: 1rem;
-    margin: 8px 0;
-    color: #555;
-  }
-  
-  .detalhes-moeda h3 {
-    font-size: 1.3rem;
-    margin-top: 20px;
-    color: #333;
-    text-decoration: underline;
-  }
-  
-  .detalhes-moeda p {
-    font-size: 1.1rem;
-    color: #666;
-  }
-  
-  .taxas {
-    background-color: #fff;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.titulo {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  font-size: 2.2rem;
+  font-weight: 600;
+}
+
+.campo {
+  margin-bottom: 30px;
+}
+
+.campo label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.campo select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: border-color 0.3s;
+}
+
+.campo select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.loading, .erro {
+  padding: 15px;
+  margin: 20px 0;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.loading {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  border: 1px solid #e9ecef;
+}
+
+.erro {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+
+.card-moeda {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-moeda h2 {
+  color: #2c3e50;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+}
+
+.resumo {
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.detalhes-moeda h3 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+}
+
+.tabela-cotacoes {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cabecalho-tabela, .linha-cotacao {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 2fr;
+  padding: 15px;
+  gap: 10px;
+  align-items: center;
+}
+
+.cabecalho-tabela {
+  background-color: #2c3e50;
+  color: white;
+  font-weight: 600;
+}
+
+.linha-cotacao {
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 0.2s;
+}
+
+.linha-cotacao:last-child {
+  border-bottom: none;
+}
+
+.linha-cotacao:hover {
+  background-color: #f8f9fa;
+}
+
+.nome-moeda {
+  font-weight: 500;
+}
+
+.positivo {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.negativo {
+  color: #dc3545;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .cabecalho-tabela, .linha-cotacao {
+    grid-template-columns: 1fr;
     padding: 10px;
-    border-radius: 5px;
-    margin-top: 15px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
   }
-  
-  .taxas p {
-    font-size: 1.1rem;
-    color: #444;
+
+  .cabecalho-tabela span {
+    display: none;
   }
-  
+
+  .linha-cotacao span::before {
+    content: attr(data-label);
+    font-weight: 600;
+    display: inline-block;
+    width: 120px;
+    color: #6c757d;
+  }
+
+  .linha-cotacao span {
+    display: flex;
+    align-items: center;
+  }
+
+  .titulo {
+    font-size: 1.8rem;
+  }
+}

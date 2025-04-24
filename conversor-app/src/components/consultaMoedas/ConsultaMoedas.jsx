@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ConsultaMoedas.css';
 
-// Mesmo conjunto de moedas usado no conversor
 const MOEDAS_DISPONIVEIS = ['BRL', 'USD', 'EUR', 'JPY', 'GBP', 'ARS', 'CAD', 'AUD', 'CHF', 'CNY'];
 const API_TOKEN = '4b1941d5f3aefc3b0a148a3a067833cbf3309cdbe62393409eb32a01d17adb47';
 
@@ -20,7 +19,7 @@ function ConsultaMoedas() {
       setError(null);
 
       try {
-        // Busca informações para todas as moedas disponíveis em relação à selecionada
+        
         const pares = MOEDAS_DISPONIVEIS
           .filter(moeda => moeda !== moedaSelecionada)
           .map(moeda => `${moedaSelecionada}-${moeda}`)
