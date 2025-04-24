@@ -1,11 +1,11 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Header from "./components/Header/Header";
-import Conversor from "./components/Conversor/Conversor";
-import ConsultaMoedas from "./components/ConsultaMoedas/ConsultaMoedas";
-import DetalheMoeda from "./components/DetalheMoeda/DetalheMoeda";
-import GraficoCotacao from "./components/GraficoCotacao/GraficoCotacao";
-import RankingMoedas from "./components/RankingMoedas/RankingMoedas";
+import Header from "./components/header/Header";
+import Conversor from "./components/conversor/Conversor";
+import ConsultaMoedas from "./components/consultaMoedas/ConsultaMoedas";
+import DetalheMoeda from "./components/detalheMoeda/DetalheMoeda";
+import GraficoCotacao from "./components/graficoCotacao/GraficoCotacao";
+import RankingMoedas from "./components/rankingMoedas/RankingMoedas";
 import "./index.css";
 
 
