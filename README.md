@@ -54,10 +54,6 @@ Execute o projeto:
 Acesse no navegador:
     http://localhost:SEU_LOCAL_HOST
 
-📸 Demonstração
-Interface do Con-Versor:
-![Preview do Con-Versor](image.png)
-
 
 📜 Licença
 Este projeto está licenciado sob os termos da MIT License.
