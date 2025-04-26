@@ -34,4 +34,5 @@ Permite consultar cotações de moedas em tempo real, visualizar rankings e gera
 
 
 📜 Licença
+
 Este projeto está licenciado sob os termos da MIT License.
