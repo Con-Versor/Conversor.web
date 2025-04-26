@@ -52,14 +52,12 @@ Execute o projeto:
     npm run dev
 
 Acesse no navegador:
-    http://localhost:
-
-🌐 APIs Utilizadas
-    AwesomeAPI - Cotações de Moedas
-    ExchangeRateAPI - Dados históricos de moedas
+    http://localhost:SEU_LOCAL_HOST
 
 📸 Demonstração
-![alt text](image.png)
+Interface do Con-Versor:
+![Preview do Con-Versor](image.png)
+
 
 📜 Licença
 Este projeto está licenciado sob os termos da MIT License.
