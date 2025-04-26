@@ -6,7 +6,7 @@ const DEBOUNCE_DELAY = 1300;
 const MOEDAS_DISPONIVEIS = ['BRL', 'USD', 'EUR', 'JPY', 'GBP', 'ARS', 'CAD', 'AUD', 'CHF', 'CNY'];
 
 function Conversor() {
-  const [valor, setValor] = useState(1);
+  const [valor, setValor] = useState('1');
   const [moedaOrigem, setMoedaOrigem] = useState('BRL');
   const [moedaDestino, setMoedaDestino] = useState('USD');
   const [resultado, setResultado] = useState(null);
@@ -26,9 +26,14 @@ function Conversor() {
     }
   }, []);
 
-
   const converterMoeda = useCallback(async () => {
-    if (!valor || valor <= 0 || !moedaOrigem || !moedaDestino) {
+    if (!valor || !moedaOrigem || !moedaDestino) {
+      setResultado(null);
+      return;
+    }
+
+    const valorNumerico = parseFloat(valor.replace(/\./g, '').replace(',', '.')) || 0;
+    if (valorNumerico <= 0) {
       setResultado(null);
       return;
     }
@@ -39,20 +44,20 @@ function Conversor() {
     try {
       const url = `https://economia.awesomeapi.com.br/json/last/${moedaOrigem}-${moedaDestino}?token=${API_TOKEN}`;
       const res = await fetch(url);
-      
+
       if (!res.ok) {
         throw new Error(`Erro na API: ${res.status}`);
       }
 
       const data = await res.json();
       const key = `${moedaOrigem}${moedaDestino}`;
-      
+
       if (!data[key]) {
         throw new Error('Moeda não encontrada na resposta');
       }
 
       const taxaConversao = parseFloat(data[key].bid);
-      const resultadoFinal = (valor * taxaConversao).toFixed(2);
+      const resultadoFinal = (valorNumerico * taxaConversao).toFixed(2);
 
       setResultado(resultadoFinal);
       setTaxa(taxaConversao.toFixed(6));
@@ -72,8 +77,12 @@ function Conversor() {
   }, [converterMoeda]);
 
   const handleValorChange = (e) => {
-    const novoValor = parseFloat(e.target.value) || 0;
-    setValor(novoValor >= 0 ? novoValor : 0);
+    let inputValue = e.target.value.replace(/\D/g, '');
+    inputValue = inputValue.replace(/^0+/, '');
+    if (inputValue) {
+      inputValue = parseInt(inputValue).toLocaleString('pt-BR');
+    }
+    setValor(inputValue);
   };
 
   const trocarMoedas = () => {
@@ -83,15 +92,13 @@ function Conversor() {
 
   return (
     <div className="conversor-container">
-      <h1 className="titulo">CONVERSOR DE MOEDAS</h1>
+      <h1 className="titulo">Conversor de Moedas</h1>
 
       <div className="bloco-conversao">
         <div className="campo">
           <label>Quantia</label>
           <input
-            type="number"
-            min="0"
-            step="0.01"
+            type="text"
             value={valor}
             onChange={handleValorChange}
             placeholder="Digite o valor"
@@ -145,7 +152,7 @@ function Conversor() {
       {resultado && !error && (
         <div className="info-cotacao">
           <p>
-            {formatarMoeda(valor, moedaOrigem)} ={' '}
+            {formatarMoeda(parseFloat(valor.replace(/\./g, '').replace(',', '.')), moedaOrigem)} ={' '}
             {formatarMoeda(resultado, moedaDestino, 'en-US')}
           </p>
           <p className="detalhes">

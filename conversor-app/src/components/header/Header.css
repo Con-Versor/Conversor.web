@@ -23,17 +23,37 @@
   height: 40px;
 }
 
+.logo-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+}
 
-.ajuda a {
-  margin-left: 1rem;
+.logo-link:hover {
+  opacity: 0.8;
+}
+
+.ajuda {
+  display: flex;
+  gap: 1rem;
+}
+
+.ajuda button {
+  background: none;
+  border: none;
   color: black;
   font-weight: bold;
-  text-decoration: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s ease, font-size 0.3s ease;
 }
 
-.ajuda a:hover {
-  text-decoration: underline;
+.ajuda button:hover {
+  text-decoration: none;
+  transform: scale(1.1);
 }
+
 
 .header-menu {
   background-color: #e0e0e0; 
@@ -51,5 +71,81 @@
 }
 
 .header-menu a:hover {
-  text-decoration: underline;
+  text-decoration: none;
+}
+.header-menu a {
+  color: black;
+  font-weight: bold;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: transform 0.3s ease, font-size 0.3s ease;
+}
+
+.header-menu a:hover {
+  transform: scale(1.1); 
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: flex-start; 
+  justify-content: center; 
+  padding-top: 80px; 
+  z-index: 1000;
+}
+@keyframes slideDown {
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.25);
+  
+  animation: slideDown 0.4s ease forwards;
+}
+.modal .fechar {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  border: none;
+  background: none;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.modal button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #333;
+  padding: 4px;
+  transition: all 0.3s ease;
+}
+
+.modal button:hover {
+  color: #f5d300; 
+  transform: scale(1.3); 
 }

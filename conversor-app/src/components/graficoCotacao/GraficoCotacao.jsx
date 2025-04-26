@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Line } from 'react-chartjs-2';
+import './GraficoCotacao.css'; 
 import { 
   Chart as ChartJS, 
   CategoryScale, 
@@ -36,6 +37,14 @@ const MOEDAS_DISPONIVEIS = [
   { code: 'CNY', name: 'Yuan Chinês' }
 ];
 
+const PERIODOS = [
+  { value: '7', label: '7 dias' },
+  { value: '15', label: '15 dias' },
+  { value: '30', label: '30 dias' },
+  { value: '90', label: '3 meses' },
+  { value: '180', label: '6 meses' }
+];
+
 const API_TOKEN = '4b1941d5f3aefc3b0a148a3a067833cbf3309cdbe62393409eb32a01d17adb47';
 
 function GraficoCotacao() {
@@ -47,9 +56,9 @@ function GraficoCotacao() {
   const [moedaDestino, setMoedaDestino] = useState('USD');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [periodo, setPeriodo] = useState('7');
+  const [periodo, setPeriodo] = useState('15');
 
-  const fetchHistoricalData = async () => {
+  const fetchHistoricalData = useCallback(async () => {
     setLoading(true);
     setError(null);
     
@@ -58,37 +67,23 @@ function GraficoCotacao() {
         throw new Error('Selecione moedas diferentes para comparação');
       }
 
-      const endDate = new Date();
-      const startDate = new Date();
-      startDate.setDate(endDate.getDate() - parseInt(periodo));
-
-
-      const formatDate = (date) => {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}${month}${day}`;
-      };
-
       const response = await fetch(
-        `https://economia.awesomeapi.com.br/json/daily/${moedaOrigem}-${moedaDestino}` +
-        `?start_date=${formatDate(startDate)}&end_date=${formatDate(endDate)}` +
-        `&token=${API_TOKEN}`
+        `https://economia.awesomeapi.com.br/json/daily/${moedaOrigem}-${moedaDestino}/${periodo}?token=${API_TOKEN}`
       );
       
       if (!response.ok) {
-        throw new Error('Erro ao carregar dados históricos');
+        throw new Error(`Erro na API: Status ${response.status}`);
       }
       
       const data = await response.json();
 
       if (!Array.isArray(data) || data.length === 0) {
-        throw new Error('Dados não disponíveis para o período selecionado');
+        throw new Error('Nenhum dado disponível para o período selecionado');
       }
 
       const processedData = data
         .map(item => ({
-          date: new Date(Number(item.timestamp) * 1000),
+          date: new Date(parseInt(item.timestamp) * 1000),
           value: parseFloat(item.bid)
         }))
         .sort((a, b) => a.date - b.date);
@@ -100,13 +95,11 @@ function GraficoCotacao() {
         })
       );
       
-      const values = processedData.map(item => item.value);
-      
       setChartData({
         labels,
         datasets: [{
           label: `1 ${moedaOrigem} = ${moedaDestino}`,
-          data: values,
+          data: processedData.map(item => item.value),
           borderColor: '#4bc0c0',
           backgroundColor: 'rgba(75, 192, 192, 0.2)',
           borderWidth: 2,
@@ -115,14 +108,13 @@ function GraficoCotacao() {
           pointBackgroundColor: '#4bc0c0',
           pointBorderColor: '#fff',
           pointRadius: 4,
-          pointHoverRadius: 6,
-          pointHitRadius: 10
+          pointHoverRadius: 6
         }]
       });
       
     } catch (err) {
       console.error('Erro ao buscar dados:', err);
-      setError(err.message || 'Não foi possível carregar os dados. Tente novamente.');
+      setError(err.message);
       setChartData({
         labels: [],
         datasets: []
@@ -130,11 +122,11 @@ function GraficoCotacao() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [moedaOrigem, moedaDestino, periodo]);
 
   useEffect(() => {
     fetchHistoricalData();
-  }, [moedaOrigem, moedaDestino, periodo]);
+  }, [fetchHistoricalData]);
 
   const chartOptions = {
     responsive: true,
@@ -154,7 +146,6 @@ function GraficoCotacao() {
             return ` ${context.dataset.label}: ${context.parsed.y.toFixed(4)}`;
           }
         },
-        displayColors: true,
         backgroundColor: '#2c3e50',
         titleFont: {
           size: 14
@@ -170,8 +161,6 @@ function GraficoCotacao() {
         ticks: {
           callback: (value) => {
             return new Intl.NumberFormat('pt-BR', {
-              style: 'currency',
-              currency: moedaDestino,
               minimumFractionDigits: 4,
               maximumFractionDigits: 4
             }).format(value);
@@ -194,11 +183,6 @@ function GraficoCotacao() {
           }
         }
       }
-    },
-    elements: {
-      line: {
-        tension: 0.4
-      }
     }
   };
 
@@ -217,7 +201,6 @@ function GraficoCotacao() {
             <select 
               value={moedaOrigem}
               onChange={(e) => setMoedaOrigem(e.target.value)}
-              className="grafico-select"
               disabled={loading}
             >
               {MOEDAS_DISPONIVEIS.map(moeda => (
@@ -233,7 +216,6 @@ function GraficoCotacao() {
             <select 
               value={moedaDestino}
               onChange={(e) => setMoedaDestino(e.target.value)}
-              className="grafico-select"
               disabled={loading}
             >
               {MOEDAS_DISPONIVEIS.map(moeda => (
@@ -249,14 +231,13 @@ function GraficoCotacao() {
             <select 
               value={periodo}
               onChange={(e) => setPeriodo(e.target.value)}
-              className="grafico-select"
               disabled={loading}
             >
-              <option value="7">7 dias</option>
-              <option value="15">15 dias</option>
-              <option value="30">30 dias</option>
-              <option value="90">3 meses</option>
-              <option value="180">6 meses</option>
+              {PERIODOS.map(periodo => (
+                <option key={periodo.value} value={periodo.value}>
+                  {periodo.label}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -265,11 +246,7 @@ function GraficoCotacao() {
       {error ? (
         <div className="grafico-error">
           <p>{error}</p>
-          <button 
-            className="grafico-retry"
-            onClick={handleRetry}
-            disabled={loading}
-          >
+          <button onClick={handleRetry} disabled={loading}>
             {loading ? 'Carregando...' : 'Tentar novamente'}
           </button>
         </div>
@@ -280,9 +257,7 @@ function GraficoCotacao() {
         </div>
       ) : (
         <div className="grafico-wrapper">
-          <div className="grafico-canvas-container">
-            <Line data={chartData} options={chartOptions} />
-          </div>
+          <Line data={chartData} options={chartOptions} />
         </div>
       )}
     </div>
