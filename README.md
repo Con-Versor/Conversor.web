@@ -32,28 +32,6 @@ Permite consultar cotações de moedas em tempo real, visualizar rankings e gera
 
 ---
 
-## 🛠️ Como Rodar o Projeto
-
-Clone o repositório:
-
-```bash
-git clone https://github.com/seu-usuario/con-versor.git
-    cd con-versor
-
-
-Instale as dependências:
-    npm install
-
-Crie um arquivo .env na raiz do projeto com as seguintes variáveis:
-    VITE_API_TOKEN=seu_token_da_awesomeapi
-    VITE_EXCHANGE_API_KEY=sua_chave_da_exchangerateapi
-
-Execute o projeto:
-    npm run dev
-
-Acesse no navegador:
-    http://localhost:SEU_LOCAL_HOST
-
 
 📜 Licença
 Este projeto está licenciado sob os termos da MIT License.
