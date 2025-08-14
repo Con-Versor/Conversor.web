@@ -1,7 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import { 
+  InformationCircleIcon,
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
+  ClockIcon,
+  CurrencyDollarIcon
+} from '@heroicons/react/24/outline';
 import './ConsultaMoedas.css';
 
-const MOEDAS_DISPONIVEIS = ['BRL', 'USD', 'EUR', 'JPY', 'GBP', 'ARS', 'CAD', 'AUD', 'CHF', 'CNY'];
+const MOEDAS_DISPONIVEIS = [
+  { code: 'BRL', name: 'Real Brasileiro', flag: '🇧🇷', symbol: 'R$' },
+  { code: 'USD', name: 'Dólar Americano', flag: '🇺🇸', symbol: '$' },
+  { code: 'EUR', name: 'Euro', flag: '🇪🇺', symbol: '€' },
+  { code: 'JPY', name: 'Iene Japonês', flag: '🇯🇵', symbol: '¥' },
+  { code: 'GBP', name: 'Libra Esterlina', flag: '🇬🇧', symbol: '£' },
+  { code: 'ARS', name: 'Peso Argentino', flag: '🇦🇷', symbol: '$' },
+  { code: 'CAD', name: 'Dólar Canadense', flag: '🇨🇦', symbol: 'C$' },
+  { code: 'AUD', name: 'Dólar Australiano', flag: '🇦🇺', symbol: 'A$' },
+  { code: 'CHF', name: 'Franco Suíço', flag: '🇨🇭', symbol: 'CHF' },
+  { code: 'CNY', name: 'Yuan Chinês', flag: '🇨🇳', symbol: '¥' }
+];
+
 const API_KEY = '83119d68084d2c94b63f2161';
 const API_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}`;
 
@@ -10,19 +29,34 @@ function ConsultaMoedas() {
   const [detalhesMoeda, setDetalhesMoeda] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [resumoMoeda, setResumoMoeda] = useState('');
   const [historicoCotacoes, setHistoricoCotacoes] = useState(() => {
-    
     const historicoInicial = {};
     MOEDAS_DISPONIVEIS.forEach(base => {
       MOEDAS_DISPONIVEIS.forEach(target => {
         if (base !== target) {
-          historicoInicial[`${base}${target}`] = [];
+          historicoInicial[`${base.code}${target.code}`] = [];
         }
       });
     });
     return historicoInicial;
   });
+
+  const obterResumoMoeda = (moeda) => {
+    const resumos = {
+      USD: "O Dólar Americano é a principal moeda de reserva internacional e a mais negociada no mundo. Emitido pelo Federal Reserve, é usado como referência em transações internacionais e como reserva de valor por bancos centrais globalmente.",
+      EUR: "O Euro é a moeda oficial de 19 países da União Europeia, representando uma das maiores economias do mundo. Gerenciado pelo Banco Central Europeu, é a segunda moeda mais negociada internacionalmente.",
+      BRL: "O Real Brasileiro é a moeda oficial do Brasil, a maior economia da América Latina. Controlado pelo Banco Central do Brasil, reflete a estabilidade econômica e as políticas monetárias do país.",
+      JPY: "O Iene Japonês é a moeda da terceira maior economia mundial. Conhecido por sua estabilidade e baixas taxas de juros, é amplamente usado em operações carry trade e como moeda refúgio.",
+      GBP: "A Libra Esterlina é uma das moedas mais antigas ainda em circulação. Apesar do Brexit, mantém-se como importante moeda de reserva e centro financeiro internacional em Londres.",
+      ARS: "O Peso Argentino enfrenta histórica volatilidade devido a crises econômicas recorrentes. Sujeito a controles cambiais e alta inflação, reflete os desafios econômicos argentinos.",
+      CAD: "O Dólar Canadense é considerado uma commodity currency, fortemente influenciado pelos preços do petróleo e recursos naturais. Beneficia-se da estabilidade política e econômica do Canadá.",
+      AUD: "O Dólar Australiano é outra importante commodity currency, vinculado aos preços de minerais e produtos agrícolas. A economia australiana diversificada sustenta sua estabilidade.",
+      CHF: "O Franco Suíço é reconhecido mundialmente como moeda refúgio devido à neutralidade suíça, estabilidade política e sistema financeiro robusto. Mantém baixa volatilidade mesmo em crises globais.",
+      CNY: "O Yuan Chinês representa a segunda maior economia mundial. Embora controlado pelo governo, vem ganhando relevância internacional e foi incluído na cesta do FMI como moeda de reserva."
+    };
+
+    return resumos[moeda] || `Informações sobre ${moeda}`;
+  };
 
   useEffect(() => {
     const fetchMoedaInfo = async () => {
@@ -50,7 +84,8 @@ function ConsultaMoedas() {
         const dataAtual = new Date(data.time_last_update_utc);
 
         Object.entries(data.conversion_rates).forEach(([moeda, valor]) => {
-          if (MOEDAS_DISPONIVEIS.includes(moeda) && moeda !== moedaSelecionada) {
+          const moedaInfo = MOEDAS_DISPONIVEIS.find(m => m.code === moeda);
+          if (moedaInfo && moeda !== moedaSelecionada) {
             const key = `${moedaSelecionada}${moeda}`;
             
             let pctChange = 0;
@@ -73,14 +108,14 @@ function ConsultaMoedas() {
               bid: valor,
               pctChange: pctChange,
               create_date: data.time_last_update_utc,
-              historico: novoHistorico[key] 
+              historico: novoHistorico[key],
+              moedaInfo: moedaInfo
             };
           }
         });
 
         setHistoricoCotacoes(novoHistorico);
         setDetalhesMoeda(cotacoesFormatadas);
-        setResumoMoeda(obterResumoMoeda(moedaSelecionada));
       } catch (err) {
         console.error('Erro ao buscar informações:', err);
         setError(`Não foi possível obter cotações: ${err.message}`);
@@ -93,31 +128,18 @@ function ConsultaMoedas() {
     return () => clearTimeout(timeoutId);
   }, [moedaSelecionada]);
 
-  const obterResumoMoeda = (moeda) => {
-    const resumos = {
-      USD: "Moeda oficial dos Estados Unidos e a principal moeda de reserva internacional, amplamente utilizada em transações comerciais e financeiras em todo o mundo.",
-      EUR: "Moeda oficial da Zona do Euro, adotada por 19 países da União Europeia e uma das principais moedas de reserva e negociação global.",
-      BRL: "Moeda oficial do Brasil, emitida e regulada pelo Banco Central do Brasil. É a principal unidade monetária do país, utilizada em todas as transações financeiras domésticas. Real é a moeda corrente no Brasil, emitida pelo Banco Central do Brasil.",
-      JPY: "Moeda oficial do Japão, emitida pelo Banco do Japão. Além de ser a terceira maior economia global, o iene é uma das principais moedas de reserva e amplamente negociada no mercado financeiro internacional.",
-      GBP: "Moeda oficial do Reino Unido, emitida pelo Banco da Inglaterra. Considerada a mais antiga moeda ainda em circulação no mundo, a libra esterlina é uma das principais moedas de reserva global e uma das mais negociadas no mercado cambial.",
-      ARS: "Moeda oficial da Argentina, emitida pelo Banco Central da República Argentina. Apesar de sua relevância regional, o peso argentino enfrenta histórica instabilidade econômica e elevada inflação, sendo frequentemente sujeito a controles cambiais pelo governo.",
-      CAD: "Moeda oficial do Canadá, emitida pelo Banco do Canadá. Considerada uma das principais commodity currencies do mundo, o dólar canadense está fortemente vinculado aos preços das commodities, especialmente do petróleo, devido à relevância do setor de recursos naturais na economia do país. Além disso, é uma das moedas mais negociadas no mercado internacional e reconhecida por sua estabilidade econômica.",
-      AUD: "Moeda oficial da Austrália e de alguns territórios insulares do Pacífico, emitida pelo Reserve Bank of Australia. Classificado como uma das principais commodity currencies, o dólar australiano tem forte correlação com a exportação de recursos minerais e agrícolas. É uma das moedas mais negociadas no mercado internacional, refletindo a solidez da economia australiana e seu status como economia desenvolvida estável.",
-      CHF: "Moeda oficial da Suíça e do Liechtenstein, emitida pelo Banco Nacional Suíço. Reconhecido globalmente como um ativo refúgio, o franco suíço é valorizado por sua estabilidade em cenários de instabilidade econômica e política, além de ser respaldado pelas sólidas reservas financeiras e pelo sistema bancário suíço. Sua força e baixa inflação o tornam uma das moedas mais seguras e negociadas no mercado internacional.",
-      CNY: "Moeda oficial da China, emitida pelo Banco Popular da China. Como divisa da segunda maior economia global, o yuan vem ganhando relevância internacional, impulsionado pela crescente abertura financeira chinesa e sua inclusão nos Direitos Especiais de Saque (SDR) do FMI. Apesar de ainda sujeito a controles governamentais, seu uso em transações internacionais tem se expandido, refletindo o peso geopolítico e comercial da China."
-    };
-
-    return resumos[moeda] || `Informações sobre ${moeda}`;
-  };
-
-  const formatarMoeda = (valor, moeda, locale = 'pt-BR') => {
+  const formatarMoeda = (valor, moeda) => {
     try {
-      return Intl.NumberFormat(locale, { 
+      const moedaInfo = MOEDAS_DISPONIVEIS.find(m => m.code === moeda);
+      return new Intl.NumberFormat('pt-BR', { 
         style: 'currency', 
-        currency: moeda 
+        currency: moeda,
+        minimumFractionDigits: moeda === 'JPY' ? 0 : 2,
+        maximumFractionDigits: moeda === 'JPY' ? 0 : 6
       }).format(valor);
     } catch {
-      return `${valor} ${moeda}`;
+      const moedaInfo = MOEDAS_DISPONIVEIS.find(m => m.code === moeda);
+      return `${moedaInfo?.symbol || moeda} ${valor.toFixed(moeda === 'JPY' ? 0 : 4)}`;
     }
   };
 
@@ -126,68 +148,130 @@ function ConsultaMoedas() {
     return new Date(timestamp).toLocaleString('pt-BR');
   };
 
+  const getMoedaInfo = (code) => {
+    return MOEDAS_DISPONIVEIS.find(moeda => moeda.code === code);
+  };
+
+  const moedaSelecionadaInfo = getMoedaInfo(moedaSelecionada);
+
   return (
-    <div className="consulta-moedas-container">
-      <h1 className="titulo">Informações sobre Moedas</h1>
-
-      <div className="campo">
-        <label>Selecione a moeda base:</label>
-        <select
-          value={moedaSelecionada}
-          onChange={(e) => setMoedaSelecionada(e.target.value)}
-          aria-label="Moeda base"
-        >
-          {MOEDAS_DISPONIVEIS.map((codigo) => (
-            <option key={codigo} value={codigo}>
-              {codigo} - {new Intl.DisplayNames(['pt'], { type: 'currency' }).of(codigo)}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {loading && <div className="loading">Carregando informações...</div>}
-      {error && <div className="erro">{error}</div>}
-
-      {detalhesMoeda && !loading && (
-        <div className="detalhes-moeda">
-          <div className="card-moeda">
-            <h2>
-              {moedaSelecionada} - {new Intl.DisplayNames(['pt'], { type: 'currency' }).of(moedaSelecionada)}
-            </h2>
-            <p className="resumo">{resumoMoeda}</p>
+    <div className="consulta-page">
+      <div className="consulta-container">
+        <div className="consulta-header">
+          <div className="header-icon">
+            <InformationCircleIcon className="icon" />
           </div>
-
-          <h3>Cotações Relativas</h3>
-          <div className="tabela-cotacoes">
-            <div className="cabecalho-tabela">
-              <span>Moeda</span>
-              <span>Valor</span>
-              <span>Variação</span>
-              <span>Atualizado em</span>
-            </div>
-            
-            {MOEDAS_DISPONIVEIS.filter(moeda => moeda !== moedaSelecionada).map((moeda) => {
-              const key = `${moedaSelecionada}${moeda}`;
-              const info = detalhesMoeda[key];
-              
-              if (!info) return null;
-
-              return (
-                <div key={key} className="linha-cotacao">
-                  <span className="nome-moeda">
-                    {moeda} - {new Intl.DisplayNames(['pt'], { type: 'currency' }).of(moeda)}
-                  </span>
-                  <span>{formatarMoeda(info.bid, moeda)}</span>
-                  <span className={info.pctChange >= 0 ? 'positivo' : 'negativo'}>
-                    {info.pctChange.toFixed(2)}%
-                  </span>
-                  <span>{formatarData(info.create_date)}</span>
-                </div>
-              );
-            })}
-          </div>
+          <h1 className="consulta-title">Consulta de Moedas</h1>
+          <p className="consulta-subtitle">
+            Explore informações detalhadas sobre moedas e suas cotações em tempo real
+          </p>
         </div>
-      )}
+
+        <div className="moeda-selector-card">
+          <label className="selector-label">
+            <CurrencyDollarIcon className="selector-icon" />
+            Selecione a moeda base:
+          </label>
+          <select
+            value={moedaSelecionada}
+            onChange={(e) => setMoedaSelecionada(e.target.value)}
+            className="moeda-selector"
+            aria-label="Moeda base"
+          >
+            {MOEDAS_DISPONIVEIS.map((moeda) => (
+              <option key={moeda.code} value={moeda.code}>
+                {moeda.flag} {moeda.code} - {moeda.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {loading && (
+          <div className="loading-card">
+            <div className="loading-spinner"></div>
+            <span>Carregando informações da moeda...</span>
+          </div>
+        )}
+
+        {error && (
+          <div className="error-card">
+            <span>{error}</span>
+          </div>
+        )}
+
+        {detalhesMoeda && !loading && moedaSelecionadaInfo && (
+          <div className="moeda-details">
+            <div className="moeda-info-card">
+              <div className="moeda-header">
+                <div className="moeda-flag">{moedaSelecionadaInfo.flag}</div>
+                <div className="moeda-title">
+                  <h2>{moedaSelecionadaInfo.name}</h2>
+                  <span className="moeda-code">{moedaSelecionada}</span>
+                </div>
+              </div>
+              <p className="moeda-description">
+                {obterResumoMoeda(moedaSelecionada)}
+              </p>
+            </div>
+
+            <div className="cotacoes-section">
+              <h3 className="section-title">
+                Cotações Relativas
+                <span className="cotacoes-count">
+                  {Object.keys(detalhesMoeda).length} moedas
+                </span>
+              </h3>
+              
+              <div className="cotacoes-grid">
+                {Object.entries(detalhesMoeda)
+                  .sort(([,a], [,b]) => Math.abs(b.pctChange) - Math.abs(a.pctChange))
+                  .map(([key, info]) => {
+                    const targetCurrency = key.replace(moedaSelecionada, '');
+                    const targetInfo = info.moedaInfo;
+                    
+                    return (
+                      <div key={key} className="cotacao-card">
+                        <div className="cotacao-header">
+                          <div className="currency-info">
+                            <span className="currency-flag">{targetInfo.flag}</span>
+                            <div className="currency-details">
+                              <span className="currency-code">{targetCurrency}</span>
+                              <span className="currency-name">{targetInfo.name}</span>
+                            </div>
+                          </div>
+                          <div className={`change-indicator ${info.pctChange >= 0 ? 'positive' : 'negative'}`}>
+                            {info.pctChange >= 0 ? (
+                              <ArrowTrendingUpIcon className="change-icon" />
+                            ) : (
+                              <ArrowTrendingDownIcon className="change-icon" />
+                            )}
+                            <span className="change-value">
+                              {Math.abs(info.pctChange).toFixed(2)}%
+                            </span>
+                          </div>
+                        </div>
+                        
+                        <div className="cotacao-value">
+                          <span className="value-label">1 {moedaSelecionada} =</span>
+                          <span className="value-amount">
+                            {formatarMoeda(info.bid, targetCurrency)}
+                          </span>
+                        </div>
+                        
+                        <div className="cotacao-footer">
+                          <ClockIcon className="time-icon" />
+                          <span className="update-time">
+                            {formatarData(info.create_date)}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -7,19 +7,20 @@ import GraficoCotacao from "./components/graficoCotacao/GraficoCotacao";
 import RankingMoedas from "./components/rankingMoedas/RankingMoedas";
 import "./index.css";
 
-
 function App() {
   return (
     <Router>
-      <Header />
-      <main style={{ padding: "2rem" }}>
-        <Routes>
-          <Route path="/" element={<Conversor />} />
-          <Route path="/moedas" element={<ConsultaMoedas />} />
-          <Route path="/grafico" element={<GraficoCotacao />} />
-          <Route path="/ranking" element={<RankingMoedas />} />
-        </Routes>
-      </main>
+      <div className="app">
+        <Header />
+        <main>
+          <Routes>
+            <Route path="/" element={<Conversor />} />
+            <Route path="/moedas" element={<ConsultaMoedas />} />
+            <Route path="/grafico" element={<GraficoCotacao />} />
+            <Route path="/ranking" element={<RankingMoedas />} />
+          </Routes>
+        </main>
+      </div>
     </Router>
   );
 }

@@ -1,167 +1,544 @@
-.consulta-moedas-container {
-  max-width: 1200px;
+.consulta-page {
+  min-height: calc(100vh - 4rem);
+  padding: 2rem 1rem;
+}
+
+.consulta-container {
+  max-width: 80rem;
   margin: 0 auto;
-  padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
 }
 
-.titulo {
+/* Header */
+.consulta-header {
   text-align: center;
-  color: #2c3e50;
-  margin-bottom: 30px;
-  font-size: 2.2rem;
+  margin-bottom: 2rem;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.header-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  background: linear-gradient(135deg, var(--info-color), #2563eb);
+  border-radius: var(--radius-xl);
+  margin: 0 auto 1rem;
+  box-shadow: var(--shadow-lg);
+}
+
+.header-icon .icon {
+  width: 2rem;
+  height: 2rem;
+  color: var(--white);
+}
+
+.consulta-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--gray-900), var(--gray-700));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.025em;
+}
+
+.consulta-subtitle {
+  font-size: 1.125rem;
+  color: var(--gray-600);
+  font-weight: 400;
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+/* Selector Card */
+.moeda-selector-card {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--gray-200);
+  margin-bottom: 2rem;
+  animation: slideDown 0.6s ease-out 0.2s both;
+}
+
+.selector-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
   font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.campo {
-  margin-bottom: 30px;
+.selector-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--info-color);
 }
 
-.campo label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  color: #2c3e50;
-}
-
-.campo select {
+.moeda-selector {
   width: 100%;
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-lg);
   font-size: 1rem;
-  background-color: #fff;
-  transition: border-color 0.3s;
+  font-weight: 500;
+  background: var(--gray-50);
+  color: var(--gray-900);
+  transition: var(--transition-fast);
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234b5563' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.25rem;
+  padding-right: 3rem;
 }
 
-.campo select:focus {
+.moeda-selector:focus {
   outline: none;
-  border-color: #3498db;
-  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+  border-color: var(--info-color);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  background: var(--white);
 }
 
-.loading, .erro {
-  padding: 15px;
-  margin: 20px 0;
-  border-radius: 6px;
-  text-align: center;
+/* Loading and Error */
+.loading-card,
+.error-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2rem;
+  border-radius: var(--radius-xl);
+  margin: 2rem 0;
   font-weight: 500;
 }
 
-.loading {
-  background-color: #f8f9fa;
-  color: #6c757d;
-  border: 1px solid #e9ecef;
+.loading-card {
+  background: linear-gradient(135deg, var(--info-light), var(--white));
+  color: var(--info-color);
+  border: 1px solid var(--info-color);
 }
 
-.erro {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
+.error-card {
+  background: linear-gradient(135deg, var(--error-light), var(--white));
+  color: var(--error-color);
+  border: 1px solid var(--error-color);
 }
 
-
-.card-moeda {
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 30px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+.loading-spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 3px solid transparent;
+  border-top: 3px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
-.card-moeda h2 {
-  color: #2c3e50;
-  margin-top: 0;
-  margin-bottom: 15px;
-  font-size: 1.5rem;
+/* Moeda Details */
+.moeda-details {
+  animation: fadeIn 0.6s ease-out 0.4s both;
 }
 
-.resumo {
-  color: #555;
+.moeda-info-card {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--gray-200);
+  margin-bottom: 2rem;
+}
+
+.moeda-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.moeda-flag {
+  font-size: 3rem;
+  width: 4rem;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gray-100);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+}
+
+.moeda-title h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin: 0 0 0.25rem 0;
+}
+
+.moeda-code {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--info-color);
+  background: var(--info-light);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-md);
+}
+
+.moeda-description {
+  color: var(--gray-700);
   line-height: 1.6;
+  font-size: 1rem;
   margin: 0;
 }
 
-.detalhes-moeda h3 {
-  color: #2c3e50;
-  margin-bottom: 15px;
-  font-size: 1.3rem;
+/* Cotações Section */
+.cotacoes-section {
+  margin-top: 2rem;
 }
 
-.tabela-cotacoes {
+.section-title {
   display: flex;
-  flex-direction: column;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 1.5rem;
+}
+
+.cotacoes-count {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-500);
+  background: var(--gray-100);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-md);
+}
+
+.cotacoes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Cotação Card */
+.cotacao-card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-fast);
+  position: relative;
   overflow: hidden;
 }
 
-.cabecalho-tabela, .linha-cotacao {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 2fr;
-  padding: 15px;
-  gap: 10px;
-  align-items: center;
+.cotacao-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--info-color);
 }
 
-.cabecalho-tabela {
-  background-color: #2c3e50;
-  color: white;
+.cotacao-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--info-color), var(--primary-color));
+  opacity: 0;
+  transition: var(--transition-fast);
+}
+
+.cotacao-card:hover::before {
+  opacity: 1;
+}
+
+.cotacao-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.currency-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.currency-flag {
+  font-size: 1.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gray-100);
+  border-radius: var(--radius-lg);
+}
+
+.currency-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.currency-code {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  line-height: 1;
+}
+
+.currency-name {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  font-weight: 500;
+}
+
+.change-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-md);
+  font-size: 0.75rem;
   font-weight: 600;
 }
 
-.linha-cotacao {
-  border-bottom: 1px solid #e0e0e0;
-  transition: background-color 0.2s;
+.change-indicator.positive {
+  background: var(--success-light);
+  color: var(--success-color);
 }
 
-.linha-cotacao:last-child {
-  border-bottom: none;
+.change-indicator.negative {
+  background: var(--error-light);
+  color: var(--error-color);
 }
 
-.linha-cotacao:hover {
-  background-color: #f8f9fa;
+.change-icon {
+  width: 1rem;
+  height: 1rem;
 }
 
-.nome-moeda {
+.change-value {
+  line-height: 1;
+}
+
+.cotacao-value {
+  margin-bottom: 1rem;
+}
+
+.value-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.value-amount {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  display: block;
+}
+
+.cotacao-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--gray-200);
+}
+
+.time-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  color: var(--gray-400);
+}
+
+.update-time {
+  font-size: 0.75rem;
+  color: var(--gray-500);
   font-weight: 500;
 }
 
-.positivo {
-  color: #28a745;
-  font-weight: 500;
-}
-
-.negativo {
-  color: #dc3545;
-  font-weight: 500;
-}
-
+/* Responsive Design */
 @media (max-width: 768px) {
-  .cabecalho-tabela, .linha-cotacao {
+  .consulta-page {
+    padding: 1rem 0.5rem;
+  }
+  
+  .consulta-title {
+    font-size: 2rem;
+  }
+  
+  .consulta-subtitle {
+    font-size: 1rem;
+  }
+  
+  .moeda-selector-card,
+  .moeda-info-card {
+    padding: 1.25rem;
+  }
+  
+  .moeda-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .moeda-flag {
+    align-self: center;
+  }
+  
+  .moeda-title {
+    text-align: center;
+    width: 100%;
+  }
+  
+  .cotacoes-grid {
     grid-template-columns: 1fr;
-    padding: 10px;
+    gap: 1rem;
   }
-
-  .cabecalho-tabela span {
-    display: none;
+  
+  .cotacao-card {
+    padding: 1.25rem;
   }
-
-  .linha-cotacao span::before {
-    content: attr(data-label);
-    font-weight: 600;
-    display: inline-block;
-    width: 120px;
-    color: #6c757d;
+  
+  .section-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
   }
+}
 
-  .linha-cotacao span {
-    display: flex;
-    align-items: center;
+@media (max-width: 480px) {
+  .consulta-page {
+    padding: 0.5rem;
   }
+  
+  .header-icon {
+    width: 3rem;
+    height: 3rem;
+  }
+  
+  .header-icon .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  
+  .consulta-title {
+    font-size: 1.75rem;
+  }
+  
+  .moeda-selector-card,
+  .moeda-info-card {
+    padding: 1rem;
+    border-radius: var(--radius-lg);
+  }
+  
+  .moeda-flag {
+    font-size: 2.5rem;
+    width: 3rem;
+    height: 3rem;
+  }
+  
+  .moeda-title h2 {
+    font-size: 1.5rem;
+  }
+  
+  .cotacao-card {
+    padding: 1rem;
+  }
+  
+  .currency-info {
+    gap: 0.5rem;
+  }
+  
+  .currency-flag {
+    font-size: 1.25rem;
+    width: 2rem;
+    height: 2rem;
+  }
+}
 
-  .titulo {
-    font-size: 1.8rem;
+@media (max-width: 360px) {
+  .consulta-title {
+    font-size: 1.5rem;
+  }
+  
+  .moeda-selector {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .cotacao-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .change-indicator {
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 320px) {
+  .consulta-page {
+    padding: 0.25rem;
+  }
+  
+  .moeda-selector-card,
+  .moeda-info-card,
+  .cotacao-card {
+    margin: 0.5rem 0;
+    border-radius: var(--radius-md);
+  }
+  
+  .cotacoes-grid {
+    gap: 0.75rem;
+  }
+  
+  .value-amount {
+    font-size: 1.125rem;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
