@@ -1,7 +1,7 @@
 <div align="center">
   <img src="conversor-app/public/favicon.ico" alt="Con-Versor Logo" width="120" height="120">
   
-  # 💱 Con-Versor
+  # Con-Versor
   
   ### Conversor de Moedas Moderno e Intuitivo
   
